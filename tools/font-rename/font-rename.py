@@ -1,9 +1,5 @@
-#!/usr/bin/env python
-# coding=utf8
-
 import sys
 import argparse
-# import os
 
 try:
     import fontforge
@@ -96,6 +92,18 @@ font.appendSFNTName("English (US)", "PostScriptName", new_fontname)
 font.appendSFNTName("English (US)", "Preferred Family", new_familyname)
 font.appendSFNTName("English (US)", "Compatible Full", new_fullname)
 
+ligature_name = 'f_l'
+ligature_tuple = ('f', 'l')
+font.addLookup(
+    'ligatures',
+    'gsub_ligature',
+    (),
+    [['rlig', [['arab', ['dflt']]]]]
+)
+font.addLookupSubtable('ligatures', 'ligatureshi')
+glyph = font.createChar(-1, ligature_name)
+glyph.addPosSub('ligatureshi', ligature_tuple)
+
 flags = (
     str("opentype"),
     str("no-FFTM-table"),
@@ -104,4 +112,3 @@ flags = (
 filename = new_fontname + ".otf"
 print("generating new font file", filename)
 font.generate(filename, flags=flags)
-font.saveNamelist("namelist")
